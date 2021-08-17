@@ -1,4 +1,4 @@
-# BarcodeDetector-api-demo
+# BarcodeDetector API demo
 A quick demo for the Barcode Detection API
 
  - demo https://lovasoa.github.io/BarcodeDetector-api-demo/
