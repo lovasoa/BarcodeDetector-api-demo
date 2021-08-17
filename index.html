@@ -50,7 +50,7 @@
         for (const device of devices) {
           if (device.kind !== "videoinput") continue;
           const option = document.createElement("option");
-          option.label = device.label || `Video device ${device.deviceId}`;
+          option.innerText = device.label || `Video device ${device.deviceId}`;
           option.value = device.deviceId;
           select.appendChild(option);
         }
