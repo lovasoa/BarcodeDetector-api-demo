@@ -14,6 +14,7 @@
     </p>
 
     <script>
+      const video = document.querySelector("video");
       let deviceId;
       async function startVideo() {
         const media = await navigator.mediaDevices.getUserMedia({
@@ -23,11 +24,11 @@
             deviceId,
           },
         });
-        document.querySelector("video").srcObject = media;
+        video.srcObject = media;
       }
 
       async function stopVideo() {
-        const media = document.querySelector("video").srcObject;
+        const media = video.srcObject;
         if (media) {
           media.getTracks().forEach((track) => track.stop());
         }
@@ -63,7 +64,7 @@
 
       async function main() {
         if (window.BarcodeDetector) {
-          read().catch((e) => console.error(e));
+          read().catch((e) => alert(e));
         } else {
           alert("This browser does not support native barcode scanning");
         }
