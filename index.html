@@ -63,12 +63,12 @@
       }
 
       async function main() {
+        await startVideo();
         if (window.BarcodeDetector) {
           read().catch((e) => alert(e));
         } else {
           alert("This browser does not support native barcode scanning");
         }
-        await startVideo();
         await listDevices();
       }
 
