@@ -39,10 +39,14 @@
           formats: ["qr_code", "data_matrix"],
         });
         async function read_frame() {
-          const results = await barcodeDetector.detect(video);
-          if (results.length) {
-            console.log(results);
-            for (const r in results) alert(r.rawValue);
+          try {
+            const results = await barcodeDetector.detect(video);
+            if (results.length) {
+              console.log(results);
+              for (const r in results) alert(r.rawValue);
+            }
+          } catch (e) {
+            console.error(e);
           }
           requestAnimationFrame(read_frame);
         }
