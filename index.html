@@ -38,11 +38,15 @@
         var barcodeDetector = new BarcodeDetector({
           formats: ["qr_code", "data_matrix"],
         });
-        while (true) {
-          const result = await barcodeDetector.detect(video);
-          console.log(result);
-          alert(result);
+        async function read_frame() {
+          const results = await barcodeDetector.detect(video);
+          if (results.length) {
+            console.log(results);
+            for (const r in results) alert(r.rawValue);
+          }
+          requestAnimationFrame(read_frame);
         }
+        read_frame();
       }
 
       async function listDevices() {
