@@ -1,29 +1,77 @@
-<script>
-  async function startVideo() {
-    const media = await navigator.mediaDevices.getUserMedia({
-      video: { width: 512, height: 512 },
-    });
-    document.querySelector("video").srcObject = media;
-  }
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Native QR Code reader demo</title>
+  </head>
+  <body>
+    <video autoplay></video>
 
-  async function read() {
-    var barcodeDetector = new BarcodeDetector({
-      formats: ["qr_code", "data_matrix"],
-    });
-    while (true) {
-      const result = await barcodeDetector.detect(video);
-      console.log(result);
-      alert(result);
-    }
-  }
+    <p>
+      <label
+        >camera:
+        <select id="device-list"></select>
+      </label>
+    </p>
 
-  startVideo();
+    <script>
+      let deviceId;
+      async function startVideo() {
+        const media = await navigator.mediaDevices.getUserMedia({
+          video: {
+            width: 512,
+            height: 512,
+            deviceId,
+          },
+        });
+        document.querySelector("video").srcObject = media;
+      }
 
-  if (window.BarcodeDetector) {
-    read().catch((e) => console.error(e));
-  } else {
-    alert("This browser does not support native barcode scanning");
-  }
-</script>
+      async function stopVideo() {
+        const media = document.querySelector("video").srcObject;
+        if (media) {
+          media.getTracks().forEach((track) => track.stop());
+        }
+      }
 
-<video autoplay></video>
+      async function read() {
+        var barcodeDetector = new BarcodeDetector({
+          formats: ["qr_code", "data_matrix"],
+        });
+        while (true) {
+          const result = await barcodeDetector.detect(video);
+          console.log(result);
+          alert(result);
+        }
+      }
+
+      async function listDevices() {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const select = document.querySelector("#device-list");
+        for (const device of devices) {
+          if (device.kind !== "videoinput") continue;
+          const option = document.createElement("option");
+          option.label = device.label;
+          option.value = device.deviceId;
+          select.appendChild(option);
+        }
+        select.onchange = async (e) => {
+          deviceId = e.target.value;
+          await stopVideo();
+          await startVideo();
+        };
+      }
+
+      async function main() {
+        if (window.BarcodeDetector) {
+          read().catch((e) => console.error(e));
+        } else {
+          alert("This browser does not support native barcode scanning");
+        }
+        await startVideo();
+        await listDevices();
+      }
+
+      main();
+    </script>
+  </body>
+</html>
