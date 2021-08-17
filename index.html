@@ -1,0 +1,29 @@
+<script>
+  async function startVideo() {
+    const media = await navigator.mediaDevices.getUserMedia({
+      video: { width: 512, height: 512 },
+    });
+    document.querySelector("video").srcObject = media;
+  }
+
+  async function read() {
+    var barcodeDetector = new BarcodeDetector({
+      formats: ["qr_code", "data_matrix"],
+    });
+    while (true) {
+      const result = await barcodeDetector.detect(video);
+      console.log(result);
+      alert(result);
+    }
+  }
+
+  startVideo();
+
+  if (window.BarcodeDetector) {
+    read().catch((e) => console.error(e));
+  } else {
+    alert("This browser does not support native barcode scanning");
+  }
+</script>
+
+<video autoplay></video>
